@@ -1,4 +1,5 @@
 package main
+
 import (
 	"log"
 	"net"
@@ -6,6 +7,7 @@ import (
 	"strings"
 	"strconv"
 )
+import (h "httpServer/goHttpByTcp/http")
 
 func main() {
 	listener, err := net.Listen("tcp", "localhost:80");
@@ -58,7 +60,8 @@ func handlerConn(conn net.Conn) {
 			finish = parseRequest(*request)
 			if finish {
 				response := handlerRequest(*request)
-				conn.Write([]byte(response))
+				fmt.Println(string(response.ToData()))
+				conn.Write(response.ToData())
 			}
 		}
 		if err != nil {
@@ -154,6 +157,11 @@ func parsePost(request httpRequest) (bool){
 	return false
 }
 
-func handlerRequest(request httpRequest) (string) {
-	return "HTTP/1.1 200 OK\r\nConnection: Keep-Alive\r\nLast-Modified : Fri , 12 May 2020 18:53:33 GMT\r\nContent-Length:14\r\nContent-Type:application/json\r\n\r\n{\"test\":\"123\"}"
+func handlerRequest(request httpRequest) (h.Response) {
+	response := new(h.Response)
+	response.SetStatusLine("HTTP/1.1 200 OK")
+	response.PutHeader("Content-Type", "application/json")
+	response.SetBody("{\"test\":\"123\"}")
+	response.PutHeader("Content-Length", strconv.Itoa(response.GetContentLength()))
+	return *response
 }
