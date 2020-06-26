@@ -39,7 +39,7 @@ func handlerConn(conn net.Conn) {
 				finishParseHeader = false
 			}
 			request.requestBody += data;
-			if strings.Index(request.requestBody, "\r\n") == -1 {
+			if strings.Index(request.requestBody, "\r\n\r\n") == -1 {
 				continue
 			}
 			if !finishParseHeader {
@@ -53,6 +53,7 @@ func handlerConn(conn net.Conn) {
 					request.protocol = *firstLineData
 					request.headMap = headLineData
 				}
+				finishParseHeader = true
 			}
 			finish = parseRequest(*request)
 			if finish {
