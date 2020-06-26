@@ -38,7 +38,7 @@ func handlerConn(conn net.Conn) {
 			headLineData := parseHeader(data[indexFirst+2:indexSecond])
 			if headLineData != nil {
 				request := new(httpRequest)
-				(*request).protocol = *firstLineData
+				request.protocol = *firstLineData
 				request.headMap = headLineData
 				response := handlerRequest(*request)
 				conn.Write([]byte(response))
