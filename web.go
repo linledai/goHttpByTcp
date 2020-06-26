@@ -146,7 +146,8 @@ func parsePost(request httpRequest) (bool){
 	requestBody := request.requestBody[index+2:]
 	length, _ := strconv.ParseInt(strings.Trim(headMap["Content-Length"], " "), 0, 32)
 	fmt.Println("POST METHOD PARSE REQUEST BODY")
-	if int(length) == len(requestBody) {
+	/** 加上/r/n的长度*/
+	if int(length) + 2 == len(requestBody) {
 		return true
 	}
 	return false
